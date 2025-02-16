@@ -1,6 +1,12 @@
 
+using DevBlog.BusinessLogic.DTO.Requests;
+using DevBlog.BusinessLogic.Interfaces;
+using DevBlog.BusinessLogic.Services;
 using DevBlog.Data;
+using DevBlog.Data.Repositories.Users;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Scalar.AspNetCore;
 
 namespace DevBlog
 {
@@ -21,36 +27,37 @@ namespace DevBlog
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DevDbConnection"))
             );
 
+            //register DI services
+            builder.Services.AddScoped<IUserRepository, UserRepository>();
+            builder.Services.AddScoped<IUserService, UserService>();
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
                 app.MapOpenApi();
+                app.MapScalarApiReference(options =>
+                {
+                    options.WithTitle("DevBlog API")
+                    .WithTheme(ScalarTheme.BluePlanet)
+                    .WithDefaultHttpClient(ScalarTarget.CSharp, ScalarClient.HttpClient);
+                });
             }
 
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
 
-            var summaries = new[]
+            //User endpoints
+            app.MapPost("/users", async ([FromBody] UserCreateRequest request,
+                IUserService _userService) =>
             {
-                "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-            };
+                var result = await _userService.CreateUser(request);
 
-            app.MapGet("/weatherforecast", (HttpContext httpContext) =>
-            {
-                var forecast = Enumerable.Range(1, 5).Select(index =>
-                    new WeatherForecast
-                    {
-                        Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-                        TemperatureC = Random.Shared.Next(-20, 55),
-                        Summary = summaries[Random.Shared.Next(summaries.Length)]
-                    })
-                    .ToArray();
-                return forecast;
-            })
-            .WithName("GetWeatherForecast");
+                return Results.Ok(result);
+
+            }).Accepts<UserCreateRequest>("application/json");
 
             //https://localhost:7070/openapi/v1.json
             //https://localhost:7058/scalar/v1
