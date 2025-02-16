@@ -1,4 +1,7 @@
 
+using DevBlog.Data;
+using Microsoft.EntityFrameworkCore;
+
 namespace DevBlog
 {
     public class Program
@@ -12,6 +15,11 @@ namespace DevBlog
 
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
             builder.Services.AddOpenApi();
+
+            //register DbContext as a service
+            builder.Services.AddDbContext<DevBlogDbContext>(options =>
+                options.UseSqlServer(builder.Configuration.GetConnectionString("DevDbConnection"))
+            );
 
             var app = builder.Build();
 
@@ -43,6 +51,9 @@ namespace DevBlog
                 return forecast;
             })
             .WithName("GetWeatherForecast");
+
+            //https://localhost:7070/openapi/v1.json
+            //https://localhost:7058/scalar/v1
 
             app.Run();
         }
