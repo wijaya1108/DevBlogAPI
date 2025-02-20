@@ -1,4 +1,5 @@
 ﻿using DevBlog.BusinessLogic.DTO.Requests;
+using DevBlog.BusinessLogic.DTO.Responses;
 using DevBlog.BusinessLogic.Interfaces;
 using DevBlog.Data.Models;
 using DevBlog.Data.Repositories.Users;
@@ -21,21 +22,43 @@ namespace DevBlog.BusinessLogic.Services
 
         public async Task<bool> CreateUser(UserCreateRequest request)
         {
-            //TODO - check if user is already there by email/name
             //TODO - hash the password
-
-            var user = new User()
+            var existingUser = await _userRepository.GetUserByEmail(request.Email);
+            
+            if (existingUser == null)
             {
-                FirstName = request.FirstName,
-                LastName = request.LastName,
-                Email = request.Email,
-                Password = request.Password,
-                IsDeleted = false
-            };
+                var user = new User()
+                {
+                    FirstName = request.FirstName,
+                    LastName = request.LastName,
+                    Email = request.Email,
+                    Password = request.Password,
+                    IsDeleted = false
+                };
 
-            var result = await _userRepository.CreateUser(user);
+                var result = await _userRepository.CreateUser(user);
+                return result;
+            }
 
-            return result;
+            return false;
+        }
+
+        public async Task<List<UserResponse>> GetAllUsers()
+        {
+            var users = await _userRepository.GetAllUsers();
+
+            if (!users.Any())
+                return new List<UserResponse>();
+
+            List<UserResponse> userResponses = users.Select(user => new UserResponse(
+                user.Id,
+                user.FirstName,
+                user.LastName,
+                user.Email
+                )).ToList();
+
+            return userResponses;
+
         }
     }
 }

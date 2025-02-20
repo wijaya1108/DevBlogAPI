@@ -1,5 +1,7 @@
 
+using Azure;
 using DevBlog.BusinessLogic.DTO.Requests;
+using DevBlog.BusinessLogic.DTO.Responses;
 using DevBlog.BusinessLogic.Interfaces;
 using DevBlog.BusinessLogic.Services;
 using DevBlog.Data;
@@ -40,7 +42,7 @@ namespace DevBlog
                 app.MapScalarApiReference(options =>
                 {
                     options.WithTitle("DevBlog API")
-                    .WithTheme(ScalarTheme.BluePlanet)
+                    .WithTheme(ScalarTheme.DeepSpace)
                     .WithDefaultHttpClient(ScalarTarget.CSharp, ScalarClient.HttpClient);
                 });
             }
@@ -55,12 +57,33 @@ namespace DevBlog
             {
                 var result = await _userService.CreateUser(request);
 
-                return Results.Ok(result);
+                SuccessResponse response = new();
+                response.Data = result;
+
+                if (result)
+                {
+                    response.StatusCode = BusinessLogic.Enums.StatusCodes.Created;
+                    return Results.Ok(response);
+                }
+
+                response.Success = false;
+                response.StatusCode = BusinessLogic.Enums.StatusCodes.BadRequest;
+                return Results.BadRequest(response);
 
             }).Accepts<UserCreateRequest>("application/json");
 
             //https://localhost:7070/openapi/v1.json
             //https://localhost:7058/scalar/v1
+
+            app.MapGet("/users", async (IUserService _userService) =>
+            {
+                var result = await _userService.GetAllUsers();
+
+                SuccessResponse response = new();
+                response.Data = result;
+
+                return Results.Ok(response);
+            });
 
             app.Run();
         }

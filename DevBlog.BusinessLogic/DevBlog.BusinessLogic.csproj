@@ -10,8 +10,4 @@
     <ProjectReference Include="..\DevBlog.Data\DevBlog.Data.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="DTO\Responses\" />
-  </ItemGroup>
-
 </Project>

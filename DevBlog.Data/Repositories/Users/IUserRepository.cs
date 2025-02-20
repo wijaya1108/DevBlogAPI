@@ -10,5 +10,7 @@ namespace DevBlog.Data.Repositories.Users
     public interface IUserRepository
     {
         Task<bool> CreateUser(User user);
+        Task<User> GetUserByEmail(string email);
+        Task<List<User>> GetAllUsers();
     }
 }
