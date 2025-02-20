@@ -1,4 +1,5 @@
 ﻿using DevBlog.BusinessLogic.DTO.Requests;
+using DevBlog.BusinessLogic.DTO.Responses;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,5 +11,6 @@ namespace DevBlog.BusinessLogic.Interfaces
     public interface IUserService
     {
         Task<bool> CreateUser(UserCreateRequest request);
+        Task<List<UserResponse>> GetAllUsers();
     }
 }

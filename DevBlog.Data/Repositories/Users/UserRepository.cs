@@ -29,9 +29,29 @@ namespace DevBlog.Data.Repositories.Users
             }
             catch (Exception ex)
             {
-                _logger.LogError("User create operation failed: {0}", ex.Message);
+                _logger.LogError("User create operation failed: {0}", ex);
                 return false;
             }
+        }
+
+        public async Task<List<User>> GetAllUsers()
+        {
+            try
+            {
+                var users = await _dbContext.Users.AsNoTracking().Where(u => u.IsDeleted == false).ToListAsync();
+                return users;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Cannot retrieve the users: {0}", ex);
+                return new List<User>();
+            }
+        }
+
+        public async Task<User> GetUserByEmail(string email)
+        {
+            var user = await _dbContext.Users.AsNoTracking().FirstOrDefaultAsync(u => u.Email == email);
+            return user;
         }
     }
 }
