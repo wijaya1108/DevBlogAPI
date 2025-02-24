@@ -53,5 +53,11 @@ namespace DevBlog.Data.Repositories.Users
             var user = await _dbContext.Users.AsNoTracking().FirstOrDefaultAsync(u => u.Email == email);
             return user;
         }
+
+        public async Task<User> GetUserById(int id)
+        {
+            var user = await _dbContext.Users.AsNoTracking().FirstOrDefaultAsync(u => u.Id == id);
+            return user;
+        }
     }
 }

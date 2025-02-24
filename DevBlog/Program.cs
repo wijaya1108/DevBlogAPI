@@ -85,6 +85,17 @@ namespace DevBlog
                 return Results.Ok(response);
             });
 
+            app.MapGet("/users/{id:int}", async (IUserService _userService,
+                int id) =>
+            {
+                var result = await _userService.GetUserById(id);
+
+                SuccessResponse response = new();
+                response.Data = result;
+
+                return Results.Ok(response);
+            });
+
             app.Run();
         }
     }
