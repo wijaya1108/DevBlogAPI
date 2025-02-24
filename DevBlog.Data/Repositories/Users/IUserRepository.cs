@@ -12,5 +12,6 @@ namespace DevBlog.Data.Repositories.Users
         Task<bool> CreateUser(User user);
         Task<User> GetUserByEmail(string email);
         Task<List<User>> GetAllUsers();
+        Task<User> GetUserById(int id);
     }
 }

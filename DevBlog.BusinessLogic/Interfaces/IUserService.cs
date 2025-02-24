@@ -12,5 +12,6 @@ namespace DevBlog.BusinessLogic.Interfaces
     {
         Task<bool> CreateUser(UserCreateRequest request);
         Task<List<UserResponse>> GetAllUsers();
+        Task<UserResponse> GetUserById(int id);
     }
 }

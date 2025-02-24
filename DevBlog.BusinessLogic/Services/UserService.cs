@@ -60,5 +60,19 @@ namespace DevBlog.BusinessLogic.Services
             return userResponses;
 
         }
+
+        public async Task<UserResponse> GetUserById(int id)
+        {
+            var user = await _userRepository.GetUserById(id);
+            UserResponse userResponse;
+
+            if (user != null)
+            {
+                userResponse = new(user.Id, user.FirstName, user.LastName, user.Email);
+                return userResponse;
+            }
+
+            return null;
+        }
     }
 }
