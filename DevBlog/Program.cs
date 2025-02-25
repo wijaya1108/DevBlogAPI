@@ -6,6 +6,8 @@ using DevBlog.BusinessLogic.Interfaces;
 using DevBlog.BusinessLogic.Services;
 using DevBlog.Data;
 using DevBlog.Data.Repositories.Users;
+using DevBlog.Validators;
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
@@ -33,6 +35,9 @@ namespace DevBlog
             builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddScoped<IUserService, UserService>();
 
+            //register fluent validation
+            builder.Services.AddValidatorsFromAssemblyContaining<Program>();
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -55,9 +60,21 @@ namespace DevBlog
             app.MapPost("/users", async ([FromBody] UserCreateRequest request,
                 IUserService _userService) =>
             {
-                var result = await _userService.CreateUser(request);
-
                 SuccessResponse response = new();
+
+                var validator = new UserCreateRequestValidator();
+                var validationResult = await validator.ValidateAsync(request);
+
+                if (!validationResult.IsValid)
+                {
+                    List<string> errors = validationResult.Errors.Select(e => e.ErrorMessage).ToList();
+                    response.Success = false;
+                    response.StatusCode = BusinessLogic.Enums.StatusCodes.BadRequest;
+                    response.ErrorList = errors;
+                    return Results.BadRequest(response);
+                }
+
+                var result = await _userService.CreateUser(request);
                 response.Data = result;
 
                 if (result)
@@ -73,7 +90,7 @@ namespace DevBlog
             }).Accepts<UserCreateRequest>("application/json");
 
             //https://localhost:7070/openapi/v1.json
-            //https://localhost:7058/scalar/v1
+            //https://localhost:7070/scalar/v1
 
             app.MapGet("/users", async (IUserService _userService) =>
             {
