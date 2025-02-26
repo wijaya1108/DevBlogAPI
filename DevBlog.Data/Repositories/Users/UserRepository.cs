@@ -19,18 +19,18 @@ namespace DevBlog.Data.Repositories.Users
             _dbContext = dbContext;
             _logger = logger;
         }
-        public async Task<bool> CreateUser(User user)
+        public async Task<User> CreateUser(User user)
         {
             try
             {
                 await _dbContext.Users.AddAsync(user);
                 await _dbContext.SaveChangesAsync();
-                return true;
+                return user;
             }
             catch (Exception ex)
             {
                 _logger.LogError("User create operation failed: {0}", ex);
-                return false;
+                return null;
             }
         }
 

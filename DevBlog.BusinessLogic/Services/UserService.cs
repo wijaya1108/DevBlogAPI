@@ -20,7 +20,7 @@ namespace DevBlog.BusinessLogic.Services
             _userRepository = userRepository;
         }
 
-        public async Task<bool> CreateUser(UserCreateRequest request)
+        public async Task<UserResponse> CreateUser(UserCreateRequest request)
         {
             //TODO - hash the password
             var existingUser = await _userRepository.GetUserByEmail(request.Email);
@@ -37,10 +37,11 @@ namespace DevBlog.BusinessLogic.Services
                 };
 
                 var result = await _userRepository.CreateUser(user);
-                return result;
+                var newUser = new UserResponse(result.Id, result.FirstName, result.LastName, result.Email);
+                return newUser;
             }
 
-            return false;
+            return null;
         }
 
         public async Task<List<UserResponse>> GetAllUsers()
