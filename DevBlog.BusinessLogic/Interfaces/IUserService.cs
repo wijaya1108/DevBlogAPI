@@ -10,7 +10,7 @@ namespace DevBlog.BusinessLogic.Interfaces
 {
     public interface IUserService
     {
-        Task<bool> CreateUser(UserCreateRequest request);
+        Task<UserResponse> CreateUser(UserCreateRequest request);
         Task<List<UserResponse>> GetAllUsers();
         Task<UserResponse> GetUserById(int id);
     }
