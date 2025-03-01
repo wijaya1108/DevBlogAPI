@@ -14,34 +14,38 @@ namespace DevBlog.BusinessLogic.Services
     public class UserService : IUserService
     {
         private readonly IUserRepository _userRepository;
+        private readonly IPasswordHasher _passwordHasher;
 
-        public UserService(IUserRepository userRepository)
+        public UserService(IUserRepository userRepository, IPasswordHasher passwordHasher)
         {
             _userRepository = userRepository;
+            _passwordHasher = passwordHasher;
         }
 
         public async Task<UserResponse> CreateUser(UserCreateRequest request)
         {
-            //TODO - hash the password
             var existingUser = await _userRepository.GetUserByEmail(request.Email);
             
-            if (existingUser == null)
+            if (existingUser != null)
             {
-                var user = new User()
-                {
-                    FirstName = request.FirstName,
-                    LastName = request.LastName,
-                    Email = request.Email,
-                    Password = request.Password,
-                    IsDeleted = false
-                };
-
-                var result = await _userRepository.CreateUser(user);
-                var newUser = new UserResponse(result.Id, result.FirstName, result.LastName, result.Email);
-                return newUser;
+                return null;
             }
 
-            return null;
+            var hashedPassword = _passwordHasher.Hash(request.Password);
+
+            var user = new User()
+            {
+                FirstName = request.FirstName,
+                LastName = request.LastName,
+                Email = request.Email,
+                Password = hashedPassword,
+                IsDeleted = false
+            };
+
+            var result = await _userRepository.CreateUser(user);
+            var newUser = new UserResponse(result.Id, result.FirstName, result.LastName, result.Email);
+            return newUser;
+
         }
 
         public async Task<List<UserResponse>> GetAllUsers()

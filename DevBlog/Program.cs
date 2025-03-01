@@ -29,6 +29,7 @@ namespace DevBlog
             //register DI services
             builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddScoped<IUserService, UserService>();
+            builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
 
             //register fluent validation
             builder.Services.AddValidatorsFromAssemblyContaining<Program>();
