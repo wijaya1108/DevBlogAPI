@@ -21,9 +21,20 @@ namespace DevBlog.BusinessLogic.Services
             byte[] salt = RandomNumberGenerator.GetBytes(SaltSize);
             byte[] hash = Rfc2898DeriveBytes.Pbkdf2(password, salt, Iterations, Algorithm, HashSize);
 
-            var hashedPassword = $"{Convert.ToHexString(hash)} - {Convert.ToHexString(salt)}";
+            var hashedPassword = $"{Convert.ToHexString(hash)}-{Convert.ToHexString(salt)}";
 
             return hashedPassword;
+        }
+
+        public bool VerifyPassword(string password, string passwordHash)
+        {
+            string[] parts = passwordHash.Split('-');
+            byte[] hash = Convert.FromHexString(parts[0]);
+            byte[] salt = Convert.FromHexString(parts[1]);
+
+            byte[] inputHash = Rfc2898DeriveBytes.Pbkdf2(password, salt, Iterations, Algorithm, HashSize);
+
+            return CryptographicOperations.FixedTimeEquals(hash, inputHash);
         }
     }
 }

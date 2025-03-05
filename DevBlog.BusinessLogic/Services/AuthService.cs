@@ -13,10 +13,12 @@ namespace DevBlog.BusinessLogic.Services
     public class AuthService : IAuthService
     {
         private readonly IUserRepository _userRepository;
+        private readonly IPasswordHasher _passwordHasher;
 
-        public AuthService(IUserRepository userRepository)
+        public AuthService(IUserRepository userRepository, IPasswordHasher passwordHasher)
         {
             _userRepository = userRepository;
+            _passwordHasher = passwordHasher;
         }
 
         public async Task<LoginResponse> LoginUser(LoginRequest request)
@@ -32,9 +34,18 @@ namespace DevBlog.BusinessLogic.Services
                 return loginResponse;
             }
 
-            //verify password
-            //if success, return success response
-            //create login endpoint
+            var isPasswordVerified = _passwordHasher.VerifyPassword(request.Password, user.Password);
+
+            if (!isPasswordVerified)
+            {
+                loginResponse.Success = false;
+                loginResponse.Message = "Password is incorrect";
+                return loginResponse;                
+            }
+
+            loginResponse.Success = true;
+            loginResponse.Email = user.Email;
+            return loginResponse;
         }
     }
 }
