@@ -30,6 +30,7 @@ namespace DevBlog
             builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
+            builder.Services.AddScoped<IAuthService, AuthService>();
 
             //register fluent validation
             builder.Services.AddValidatorsFromAssemblyContaining<Program>();
@@ -57,6 +58,7 @@ namespace DevBlog
 
             //add endpoints
             app.AddUserEndpoints();
+            app.AddAuthEndpoints();
 
             app.Run();
         }
