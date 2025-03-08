@@ -1,6 +1,7 @@
 ﻿using DevBlog.BusinessLogic.DTO.Requests;
 using DevBlog.BusinessLogic.DTO.Responses;
 using DevBlog.BusinessLogic.Interfaces;
+using DevBlog.Validators;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DevBlog.Endpoints
@@ -12,18 +13,23 @@ namespace DevBlog.Endpoints
             app.MapPost("/blogs", async (IBlogService _blogService,
                 BlogCreateRequest request) =>
             {
-                //TODO - validation
-                var result = await _blogService.CreateBlog(request);
+                var validator = new BlogCreateRequestValidator();
+                var validationResult = await validator.ValidateAsync(request);
 
                 SuccessResponse response = new();
-                response.Data = result;
 
-                if (result == null)
+                if (!validationResult.IsValid)
                 {
+                    var errors = validationResult.Errors.Select(e => e.ErrorMessage).ToList();
                     response.Success = false;
-                    response.StatusCode = BusinessLogic.Enums.StatusCodes.InternalServerError;
-                    return Results.InternalServerError(response);
+                    response.StatusCode = BusinessLogic.Enums.StatusCodes.BadRequest;
+                    response.ErrorList = errors;
+                    return Results.BadRequest(response);
                 }
+
+                var result = await _blogService.CreateBlog(request);
+                
+                response.Data = result;
 
                 return Results.Ok(response);
             });

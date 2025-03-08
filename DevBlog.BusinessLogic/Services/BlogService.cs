@@ -32,9 +32,7 @@ namespace DevBlog.BusinessLogic.Services
 
             var result = await _blogRepository.InsertBlog(newBlog);
 
-            if (result != null)
-            {
-                var blogResponse = new BlogCreateResponse(
+            var blogResponse = new BlogCreateResponse(
                     result.Id,
                     result.Title,
                     result.Content,
@@ -43,10 +41,7 @@ namespace DevBlog.BusinessLogic.Services
                     result.ModifiedOn,
                     result.IsDeleted);
 
-                return blogResponse;
-            }
-
-            return null;
+            return blogResponse;
         }
     }
 }

@@ -4,6 +4,7 @@ using DevBlog.Data;
 using DevBlog.Data.Repositories.Blogs;
 using DevBlog.Data.Repositories.Users;
 using DevBlog.Endpoints;
+using DevBlog.Middlewares;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
@@ -51,6 +52,9 @@ namespace DevBlog
                     .WithDefaultHttpClient(ScalarTarget.CSharp, ScalarClient.HttpClient);
                 });
             }
+
+            //Add the custom middleware to the pipleline
+            app.UseMiddleware<ExceptionHandlingMiddleware>();
 
             app.UseHttpsRedirection();
 
