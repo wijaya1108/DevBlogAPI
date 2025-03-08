@@ -9,7 +9,7 @@ namespace DevBlog.BusinessLogic.DTO.Responses
     public class LoginResponse
     {
         public bool Success { get; set; }
-        public string? Message { get; set; }
         public string? Email { get; set; }
+        public List<string>? Errors { get; set; } = new List<string>();
     }
 }

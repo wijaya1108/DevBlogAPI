@@ -30,7 +30,7 @@ namespace DevBlog.BusinessLogic.Services
             if (user == null)
             {
                 loginResponse.Success = false;
-                loginResponse.Message = "User email does not exist";
+                loginResponse.Errors.Add("User email does not exist");
                 return loginResponse;
             }
 
@@ -39,7 +39,7 @@ namespace DevBlog.BusinessLogic.Services
             if (!isPasswordVerified)
             {
                 loginResponse.Success = false;
-                loginResponse.Message = "Password is incorrect";
+                loginResponse.Errors.Add("Password is incorrect");
                 return loginResponse;                
             }
 

@@ -1,6 +1,7 @@
 using DevBlog.BusinessLogic.Interfaces;
 using DevBlog.BusinessLogic.Services;
 using DevBlog.Data;
+using DevBlog.Data.Repositories.Blogs;
 using DevBlog.Data.Repositories.Users;
 using DevBlog.Endpoints;
 using FluentValidation;
@@ -31,6 +32,8 @@ namespace DevBlog
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
             builder.Services.AddScoped<IAuthService, AuthService>();
+            builder.Services.AddScoped<IBlogService, BlogService>();
+            builder.Services.AddScoped<IBlogRepository, BlogRepository>();
 
             //register fluent validation
             builder.Services.AddValidatorsFromAssemblyContaining<Program>();
@@ -44,7 +47,7 @@ namespace DevBlog
                 app.MapScalarApiReference(options =>
                 {
                     options.WithTitle("DevBlog API")
-                    .WithTheme(ScalarTheme.DeepSpace)
+                    .WithTheme(ScalarTheme.BluePlanet)
                     .WithDefaultHttpClient(ScalarTarget.CSharp, ScalarClient.HttpClient);
                 });
             }
@@ -59,6 +62,7 @@ namespace DevBlog
             //add endpoints
             app.AddUserEndpoints();
             app.AddAuthEndpoints();
+            app.AddBlogEndpoints();
 
             app.Run();
         }
