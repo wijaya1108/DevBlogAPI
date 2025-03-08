@@ -22,17 +22,9 @@ namespace DevBlog.Data.Repositories.Blogs
 
         public async Task<Blog> InsertBlog(Blog blog)
         {
-            try
-            {
-                await _dbContext.Blogs.AddAsync(blog);
-                await _dbContext.SaveChangesAsync();
-                return blog;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError("Error occured while creating the Blog: {0}", ex.Message);
-                return null;
-            }
+            await _dbContext.Blogs.AddAsync(blog);
+            await _dbContext.SaveChangesAsync();
+            return blog;
         }
     }
 }

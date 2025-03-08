@@ -21,31 +21,15 @@ namespace DevBlog.Data.Repositories.Users
         }
         public async Task<User> CreateUser(User user)
         {
-            try
-            {
-                await _dbContext.Users.AddAsync(user);
-                await _dbContext.SaveChangesAsync();
-                return user;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError("User create operation failed: {0}", ex);
-                return null;
-            }
+            await _dbContext.Users.AddAsync(user);
+            await _dbContext.SaveChangesAsync();
+            return user;
         }
 
         public async Task<List<User>> GetAllUsers()
         {
-            try
-            {
-                var users = await _dbContext.Users.AsNoTracking().Where(u => u.IsDeleted == false).ToListAsync();
-                return users;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError("Cannot retrieve the users: {0}", ex);
-                return new List<User>();
-            }
+            var users = await _dbContext.Users.AsNoTracking().Where(u => u.IsDeleted == false).ToListAsync();
+            return users;
         }
 
         public async Task<User> GetUserByEmail(string email)
