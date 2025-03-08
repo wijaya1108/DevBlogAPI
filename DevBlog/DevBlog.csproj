@@ -19,7 +19,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DevBlog.BusinessLogic\DevBlog.BusinessLogic.csproj" />
-    <ProjectReference Include="..\DevBlog.Data\DevBlog.Data.csproj" />
   </ItemGroup>
 
 </Project>
