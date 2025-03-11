@@ -33,6 +33,14 @@ namespace DevBlog.Endpoints
 
                 return Results.Ok(response);
             });
+
+
+            app.MapGet("/blogs", async (IBlogService _blogService) =>
+            {
+                var result = await _blogService.GetAllBlogs();
+
+                return Results.Ok(result);
+            });
         }
     }
 }

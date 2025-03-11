@@ -17,7 +17,6 @@ namespace DevBlog.Data.Models
         public DateTime? ModifiedOn { get; set; }
         public bool IsDeleted { get; set; }
 
-        [NotMapped]
         public User? UserDetails { get; set; }
     }
 }

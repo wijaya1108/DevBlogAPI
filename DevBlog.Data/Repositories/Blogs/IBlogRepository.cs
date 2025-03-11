@@ -10,5 +10,6 @@ namespace DevBlog.Data.Repositories.Blogs
     public interface IBlogRepository
     {
         Task<Blog> InsertBlog(Blog blog);
+        Task<List<Blog>> GetAllBlogs();
     }
 }
