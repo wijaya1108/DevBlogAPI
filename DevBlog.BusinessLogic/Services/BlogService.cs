@@ -43,5 +43,30 @@ namespace DevBlog.BusinessLogic.Services
 
             return blogResponse;
         }
+
+        public async Task<List<BlogResponse>> GetAllBlogs()
+        {
+            var blogs = await _blogRepository.GetAllBlogs();
+
+            List<BlogResponse> blogResponseList = new List<BlogResponse>();
+
+            if (blogs != null)
+            {
+                blogResponseList = blogs.Select(b => new BlogResponse(
+                    b.Id,
+                    b.Title,
+                    b.Content,
+                    b.CreatedOn,
+                    b.ModifiedOn,
+                    b.IsDeleted,
+                    b.UserId,
+                    b.UserDetails.FirstName,
+                    b.UserDetails?.LastName)).ToList();
+
+                return blogResponseList;
+            }
+
+            return blogResponseList;
+        }
     }
 }

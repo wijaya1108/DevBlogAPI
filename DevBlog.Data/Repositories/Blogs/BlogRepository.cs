@@ -1,5 +1,6 @@
 ﻿using DevBlog.Data.Models;
 using DevBlog.Data.Repositories.Users;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -18,6 +19,27 @@ namespace DevBlog.Data.Repositories.Blogs
         {
             _dbContext = dbCOntext;
             _logger = logger;
+        }
+
+        public async Task<List<Blog>> GetAllBlogs()
+        {
+            //var blogs = await _dbContext.Blogs
+            //    .AsNoTracking()
+            //    .Where(b => b.IsDeleted == false)
+            //    .ToListAsync();
+
+            //foreach (var blog in blogs)
+            //{
+            //    blog.User = await _dbContext.Users.FirstOrDefaultAsync(u => u.Id == blog.UserId);
+            //}
+
+            var blogs = await _dbContext.Blogs
+                .AsNoTracking()
+                .Include(b => b.UserDetails)
+                .Where(b => b.IsDeleted == false)
+                .ToListAsync();
+
+            return blogs;
         }
 
         public async Task<Blog> InsertBlog(Blog blog)

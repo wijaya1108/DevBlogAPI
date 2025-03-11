@@ -6,5 +6,7 @@ namespace DevBlog.BusinessLogic.Interfaces
     public interface IBlogService
     {
         Task<BlogCreateResponse?> CreateBlog(BlogCreateRequest request);
+
+        Task<List<BlogResponse>> GetAllBlogs();
     }
 }
