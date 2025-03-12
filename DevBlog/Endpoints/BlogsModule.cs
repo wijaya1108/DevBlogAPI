@@ -28,7 +28,7 @@ namespace DevBlog.Endpoints
                 }
 
                 var result = await _blogService.CreateBlog(request);
-                
+
                 response.Data = result;
 
                 return Results.Ok(response);
@@ -38,6 +38,13 @@ namespace DevBlog.Endpoints
             app.MapGet("/blogs", async (IBlogService _blogService) =>
             {
                 var result = await _blogService.GetAllBlogs();
+
+                return Results.Ok(result);
+            });
+
+            app.MapGet("/blogs/{id:int}", async (IBlogService _blogService, int id) =>
+            {
+                var result = await _blogService.GetBlogById(id);
 
                 return Results.Ok(result);
             });

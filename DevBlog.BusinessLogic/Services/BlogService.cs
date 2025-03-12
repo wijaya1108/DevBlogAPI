@@ -68,5 +68,29 @@ namespace DevBlog.BusinessLogic.Services
 
             return blogResponseList;
         }
+
+        public async Task<BlogResponse> GetBlogById(int id)
+        {
+            var blog = await _blogRepository.GetBlogById(id);
+
+            if (blog != null)
+            {
+                var blogResponse = new BlogResponse(
+                    blog.Id,
+                    blog.Title,
+                    blog.Content,
+                    blog.CreatedOn,
+                    blog.ModifiedOn,
+                    blog.IsDeleted,
+                    blog.UserId,
+                    blog.UserDetails.FirstName,
+                    blog.UserDetails?.LastName
+                    );
+
+                return blogResponse;
+            }
+
+            return null;
+        }
     }
 }
