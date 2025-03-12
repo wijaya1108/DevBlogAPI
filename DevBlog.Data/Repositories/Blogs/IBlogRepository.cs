@@ -11,5 +11,6 @@ namespace DevBlog.Data.Repositories.Blogs
     {
         Task<Blog> InsertBlog(Blog blog);
         Task<List<Blog>> GetAllBlogs();
+        Task<Blog> GetBlogById(int id);
     }
 }

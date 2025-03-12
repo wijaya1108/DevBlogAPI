@@ -48,5 +48,15 @@ namespace DevBlog.Data.Repositories.Blogs
             await _dbContext.SaveChangesAsync();
             return blog;
         }
+
+        public async Task<Blog> GetBlogById(int id)
+        {
+            var blog = await _dbContext.Blogs
+                .AsNoTracking()
+                .Include(b => b.UserDetails)
+                .FirstOrDefaultAsync(b => b.Id == id && b.IsDeleted == false);
+
+            return blog;
+        }
     }
 }
