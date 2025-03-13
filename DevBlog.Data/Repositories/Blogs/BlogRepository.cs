@@ -36,7 +36,7 @@ namespace DevBlog.Data.Repositories.Blogs
             var blogs = await _dbContext.Blogs
                 .AsNoTracking()
                 .Include(b => b.UserDetails)
-                .Where(b => b.IsDeleted == false)
+                .Where(b => !b.IsDeleted)
                 .ToListAsync();
 
             return blogs;
@@ -54,9 +54,42 @@ namespace DevBlog.Data.Repositories.Blogs
             var blog = await _dbContext.Blogs
                 .AsNoTracking()
                 .Include(b => b.UserDetails)
-                .FirstOrDefaultAsync(b => b.Id == id && b.IsDeleted == false);
+                .FirstOrDefaultAsync(b => b.Id == id && !b.IsDeleted);
 
             return blog;
+        }
+
+        public async Task<bool> UpdateBlog(Blog blog)
+        {
+            var existingBlog = await _dbContext.Blogs.FirstOrDefaultAsync(b => b.Id == blog.Id && !b.IsDeleted);
+
+            if (existingBlog != null)
+            {
+                existingBlog.Title = blog.Title;
+                existingBlog.Content = blog.Content;
+                existingBlog.UserId = blog.UserId;
+                existingBlog.ModifiedOn = blog.ModifiedOn;
+
+                await _dbContext.SaveChangesAsync();
+
+                return true;
+            }
+
+            return false;
+        }
+
+        public async Task<bool> DeleteBlog(int id)
+        {
+            var existingBlog = await _dbContext.Blogs.FirstOrDefaultAsync(b => b.Id == id);
+
+            if (existingBlog != null)
+            {
+                existingBlog.IsDeleted = true;
+                await _dbContext.SaveChangesAsync();
+                return true;
+            }
+
+            return false;
         }
     }
 }

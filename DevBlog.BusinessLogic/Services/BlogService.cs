@@ -92,5 +92,28 @@ namespace DevBlog.BusinessLogic.Services
 
             return null;
         }
+
+        public async Task<bool> UpdateBlog(BlogUpdateRequest request)
+        {
+            var blog = new Blog()
+            {
+                Id = request.Id,
+                Title = request.Title,
+                Content = request.Content,
+                UserId = request.UserId,
+                ModifiedOn = DateTime.Now
+            };
+
+            var result = await _blogRepository.UpdateBlog(blog);
+
+            return result;
+        }
+
+        public async Task<bool> DeleteBlog(int id)
+        {
+            var result = await _blogRepository.DeleteBlog(id);
+
+            return result;
+        }
     }
 }
