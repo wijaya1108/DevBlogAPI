@@ -8,5 +8,7 @@ namespace DevBlog.BusinessLogic.Interfaces
         Task<BlogCreateResponse?> CreateBlog(BlogCreateRequest request);
         Task<List<BlogResponse>> GetAllBlogs();
         Task<BlogResponse> GetBlogById(int id);
+        Task<bool> UpdateBlog(BlogUpdateRequest request);
+        Task<bool> DeleteBlog(int id);
     }
 }
