@@ -11,5 +11,6 @@ namespace DevBlog.BusinessLogic.DTO.Responses
         public bool Success { get; set; }
         public string? Email { get; set; }
         public List<string>? Errors { get; set; } = new List<string>();
+        public string Token { get; set; }
     }
 }
