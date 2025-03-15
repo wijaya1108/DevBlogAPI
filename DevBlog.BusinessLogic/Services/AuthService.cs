@@ -14,11 +14,13 @@ namespace DevBlog.BusinessLogic.Services
     {
         private readonly IUserRepository _userRepository;
         private readonly IPasswordHasher _passwordHasher;
+        private readonly ITokenService _tokenService;
 
-        public AuthService(IUserRepository userRepository, IPasswordHasher passwordHasher)
+        public AuthService(IUserRepository userRepository, IPasswordHasher passwordHasher, ITokenService tokenService)
         {
             _userRepository = userRepository;
             _passwordHasher = passwordHasher;
+            _tokenService = tokenService;
         }
 
         public async Task<LoginResponse> LoginUser(LoginRequest request)
@@ -43,8 +45,12 @@ namespace DevBlog.BusinessLogic.Services
                 return loginResponse;                
             }
 
+            var token = await _tokenService.CreateToken(user);
+
             loginResponse.Success = true;
             loginResponse.Email = user.Email;
+            loginResponse.Token = token;
+
             return loginResponse;
         }
     }

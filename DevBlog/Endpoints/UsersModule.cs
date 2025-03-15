@@ -49,7 +49,7 @@ namespace DevBlog.Endpoints
                 response.Data = result;
 
                 return Results.Ok(response);
-            });
+            }).RequireAuthorization();
 
 
             app.MapGet("/users/{id:int}", async (IUserService _userService,
